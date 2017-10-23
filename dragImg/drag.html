@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Drag Page</title>
+	<style type="text/css" rel="stylesheet">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.header{
+			width: 50px;
+			height: 30px;
+			background-color: blue;
+		    position: absolute;
+			right:20px;
+			top: 20px;
+			border-radius: 5px;
+			text-align: center;
+			line-height: 30px;
+			cursor: pointer;
+		}
+		.content{
+			text-align: center;
+			margin-top: 150px;
+		}
+		.content .hide form{
+			position: absolute;
+			width: 500px;
+			height: 500px;
+			z-index: 2;
+			display: none;
+		}
+		form .form-header{
+			background-color: gray;
+			height: 60px;
+			text-align: left;
+			line-height: 60px;
+		}
+		form .form-header span{
+			margin-left: 20px;
+			font-size: 18px;
+		}
+		form .form-header .close{
+			width: 22px;
+			height: 20px;
+			position: absolute;
+			right: 20px;
+			top: 0;
+		}
+		form .form-header img{
+			width: 20px;
+			height: 20px;
+		}
+		form .form-header a{
+			opacity: 0.5;
+		}
+		form .form-header a:hover{
+			opacity: 1;
+		}
+		form .form-content{
+			height: 440px;
+			overflow: hidden;
+		}
+		.mask{
+			width: 100%;
+			height: 100%;
+			background-color: black;
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0.4;
+			z-index: 1; 
+			display: none;
+		}
+	</style>
+</head>
+<body onselectstart="return false">
+<div class="wrap">
+	<div class="header" id="enter">登录</div>
+	<div class="content">
+		<img src="img/timg.jpg" />
+		<div class="hide">
+			<form id="dialog">
+				<div class="form-header" id="form-header">
+					<span>登录百度帐号</span>
+					<div class="close">
+						<a href="javascript:hiddenLogin();">
+						   <img src="img/error.jpg">
+						</a>
+					</div>
+				</div>
+				<div class="form-content">
+					<img src="img/happy.jpg" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="mask" id="mask"></div>
+</div>
+<script type="text/javascript">
+	function g(classId){
+		let method = classId.substr(0,1) === '.' ? 'getElementsByClassName' : 'getElementById';
+		return document[method](classId.substr(1));
+	}
+
+
+	//log-in auto center
+	//
+	function autoCenter(el){
+		const bodyWidth = document.documentElement.clientWidth;
+		const bodyHeight = document.documentElement.clientHeight;
+		const elWidth = el.offsetWidth;
+		const elHeight = el.offsetHeight;
+		el.style.left = (bodyWidth - elWidth)/2 + 'px';
+		el.style.top = (bodyHeight - elHeight)/2 + 'px';
+	}
+
+
+	//mask auto fill
+	//
+	function fillTobody(el){
+		el.style.width = document.documentElement.clientWidth + 'px';
+		el.style.height = document.documentElement.clientHeight +'px';
+	}
+
+	function hiddenLogin(){
+		g('#dialog').style.display = 'none';
+		g('#mask').style.display = 'none';
+	}
+		g('#enter').onclick = function(){
+		   	g('#dialog').style.display = 'block';
+		    g('#mask').style.display = 'block';
+		    autoCenter(g('#dialog'));
+		    fillTobody(g('#mask'));
+		}
+
+    let mouseOffsetX = 0,mouseOffsetY = 0,isDraging = false;
+	g('#form-header').addEventListener('mousedown',function(e){
+		mouseOffsetX = e.pageX - g('#dialog').offsetLeft;
+		mouseOffsetY = e.pageY - g('#dialog').offsetTop;
+		isDraging = true;
+	})
+	g('#form-header').addEventListener('mousemove',function(e){
+		const mouseX = e.pageX; //鼠标当前的位置
+		const mouseY = e.pageY;
+		let moveX = 0,moveY = 0;
+
+		if(isDraging === true){
+			moveX = mouseX - mouseOffsetX; //move distance
+			moveY = mouseY - mouseOffsetY;
+		//move range
+		
+		const pageWidth = document.documentElement.clientWidth;
+		const pageHeight = document.documentElement.clientHeight;
+		const dialogWidth = g('#dialog').offsetWidth;
+		const dialogHeight = g('#dialog').offsetHeight;
+		const maxX = pageWidth - dialogWidth;
+		const maxY = pageHeight - dialogHeight;
+		moveX = Math.min(maxX, Math.max(0,moveX));
+		moveY = Math.min(maxY, Math.max(0,moveY));
+		g('#dialog').style.left = moveX + 'px';
+		g('#dialog').style.top = moveY + 'px';
+	}
+
+	})
+	g('#form-header').addEventListener('mouseup',function(e){
+		isDraging = false;
+	})
+	window.onresize = function(){
+		autoCenter(g('#dialog'));
+		fillTobody(g('#mask'));
+	}
+</script>
+</body>
+</html>

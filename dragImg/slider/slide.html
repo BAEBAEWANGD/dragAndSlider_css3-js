@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>slider-picture</title>
+	<link rel="stylesheet" type="text/css" href="slide.css">
+</head>
+<body>
+<div class="wrap">
+	<div id="slider">
+		<div class="main-content" id="main-content">
+			<div class="main-i"  id="main-{{index}}">
+				<img src="image/{{index}}.jpg" />
+			</div>
+		</div>
+		<div class="ctrl ctrl-content" id="ctrl-content">
+			<a class="ctrl-i" id="ctrl-{{index}}" href="javascript:switchButton({{index}});"></a>
+		</div>
+	</div>
+	<div id="ctrl-left"></div>
+	<div id="ctrl-right"></div>
+</div>
+<script type="text/javascript" src="slide.js"></script>
+</body>
+</html>
